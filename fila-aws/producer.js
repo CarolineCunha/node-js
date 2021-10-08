@@ -26,7 +26,7 @@ var params = {
   MessageBody: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
   // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
   // MessageGroupId: "Group1",  // Required for FIFO queues
-  QueueUrl: "https://sqs.us-east-1.amazonaws.com/328367910941/teste.fifo"
+  QueueUrl: `${process.env.AWS_QUEUE_URL}`
   
 };
 

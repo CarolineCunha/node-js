@@ -1,11 +1,13 @@
 // Load the AWS SDK for Node.js
+require('dotenv').config()
 var AWS = require('aws-sdk');
 // Set the region
 AWS.config.update({region: 'us-east-1'});
 
 // Create an SQS service object
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
-
+const teste = process.env.AWS_QUEUE_URL
+console.log(teste)
 var queueURL = "https://sqs.us-east-1.amazonaws.com/328367910941/teste.fifo";
 
 var params = {
