@@ -6,9 +6,10 @@ AWS.config.update({region: 'us-east-1'});
 // Create an SQS service object
 var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
+
 var params = {
    // Remove DelaySeconds parameter and value for FIFO queues
-  DelaySeconds: 10,
+  //DelaySeconds: 10,
   MessageAttributes: {
     "Title": {
       DataType: "String",
@@ -24,9 +25,9 @@ var params = {
     }
   },
   MessageBody: "Information about current NY Times fiction bestseller for week of 12/11/2016.",
-  // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
-  // MessageGroupId: "Group1",  // Required for FIFO queues
-  QueueUrl: `${process.env.AWS_QUEUE_URL}`
+  MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
+  MessageGroupId: "1",  // Required for FIFO queues
+  QueueUrl: "https://sqs.us-east-1.amazonaws.com/328367910941/teste.fifo"
   
 };
 
