@@ -1,0 +1,21 @@
+service: variaveis
+
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+
+resources:
+  Resources:
+    filavariaveis:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: ${self:service}-filaVariaveis.fifo
+        VisibilityTimeout: 300
+        FifoQueue: true
+        ContentBasedDeduplication: true
+
