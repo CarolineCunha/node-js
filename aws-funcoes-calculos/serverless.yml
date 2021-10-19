@@ -1,0 +1,21 @@
+service: aws-funcoes-calculos
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+
+functions:
+  soma:
+    handler: handler.soma
+    events:
+      - http:
+          path: /soma
+          method: GET
+          cors: true
+          
+
+  
