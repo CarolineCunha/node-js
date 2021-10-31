@@ -24,10 +24,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
-
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -88,6 +85,8 @@ Resources:
     Type: "AWS::IAM::InstanceProfile"
     Properties: 
       Path: "/"
+      ManagedPolicyArns:
+      - !Ref SampleManagedPolicy
       Roles: 
         - Ref: "RootRole"
 

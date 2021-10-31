@@ -38,7 +38,7 @@ module.exports.log = async(event, context) => {
     if (status === 'Complete') {
       const metrics = [{
         MetricName: '% of Success',
-        Value: queryResults.statistics.recordsMatched,
+        Value: queryResults.results[0][0].value,
         Timestamp: endTime
       }]
       const paramsPutMetricData = {
