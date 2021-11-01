@@ -85,8 +85,6 @@ Resources:
     Type: "AWS::IAM::InstanceProfile"
     Properties: 
       Path: "/"
-      ManagedPolicyArns:
-      - !Ref SampleManagedPolicy
       Roles: 
         - Ref: "RootRole"
 
