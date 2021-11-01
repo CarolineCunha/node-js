@@ -4,10 +4,7 @@ const cloudwatchlogs = new AWS.CloudWatchLogs();
 const cloudwatch = new AWS.CloudWatch();
 const logGroupNames = '/aws/lambda/logs-metrics-dev-log'.split(',');
 const queryString = 'fields @timestamp,  @message| filter @message like /INFO/| parse @message "INFO" as info| stats count(info)/2 as result';
-const queryPeriod = 3000;
-const queryDelay = 1;
 const queryRetry = 10;
-let done = false;
 
 function sleep(ms) {
   return x => new Promise(resolve => setTimeout(() => resolve(x), ms));
@@ -28,8 +25,8 @@ module.exports.log = async(event, context) => {
     limit: 1,
   };
   return cloudwatchlogs.startQuery(paramsStartQuery).promise().then(async(data) => {
-    var queryResults;
-    var status = '';
+    let queryResults;
+    let status = '';
     while (!['Complete', 'Failed', 'Cancelled'].includes(status)) {
       queryResults = await cloudwatchlogs.getQueryResults({ queryId: data.queryId }).promise().then(sleep(queryRetry)).catch((err) => { console.log(err); return { status: 'Failed' }; });
       ({ status } = queryResults);
