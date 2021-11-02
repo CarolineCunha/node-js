@@ -8,9 +8,6 @@ provider:
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
   region: us-east-1
-  Parameters:
-  DistributionId:
-    Type: String
 
 functions:
   log:
@@ -25,64 +22,29 @@ functions:
 
 resources:
   Resources:
-    CloudWatchLogsRole:
-      Type: AWS::IAM::Role
+    EscalationTopic:
+      Type: AWS::SNS::Topic
       Properties:
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service: ["ec2.amazonaws.com"]
-              Action: ["sts:AssumeRole"]
-        Policies:
-          - PolicyName: AppLogsPolicy
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action:
-                    [
-                      "logs:CreateLogGroup",
-                      "logs:CreateLogStream",
-                      "logs:GetLogEvents",
-                      "logs:PutLogEvents",
-                      "logs:DescribeLogGroups",
-                      "logs:DescribeLogStreams",
-                      "logs:FilterLogEvents",
-                      "logs:PutRetentionPolicy",
-                      "cloudwatch:PutMetricData",
-                      "logs:GetQueryResults",
-                      "logs:StartQuery",
-                      "sns:Publish"
-                    ]
-                  Resource: "*"
-  
-Resources:
-  EscalationTopic:
-    Type: AWS::SNS::Topic
+        TopicName: teste-topic
 
-  EscalationTopicEmailSubscriber:
+    EscalationTopicEmailSubscriber:
       Type: AWS::SNS::Subscription
       Properties:
         Endpoint: caroline.cunha.b@hotmail.com
         Protocol: email
         TopicArn: !Ref EscalationTopic
 
-  CloudFrontTotalErrorRateAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      ActionsEnabled: true
-      AlarmName: "[Notif][ASG][Lambda] Elevated error volume"
-      Namespace: 'teste-carol'
-      MetricName: '% of Success'
-      Dimensions:
-        - Name: DistributionId
-          Value: !Ref DistributionId
-      Statistic: Sum
-      Period: 300
-      EvaluationPeriods: 1
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Threshold: 1
-      AlarmActions:
-        - !Ref EscalationTopic
+    CloudFrontTotalErrorRateAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        ActionsEnabled: true
+        AlarmName: "[Notif][ASG][Lambda] Elevated error volume"
+        Namespace: 'teste-carol'
+        MetricName: '% of Success'
+        Statistic: Sum
+        Period: 300
+        EvaluationPeriods: 1
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        Threshold: 1
+        AlarmActions:
+          - !Ref EscalationTopic
