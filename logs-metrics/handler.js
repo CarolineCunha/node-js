@@ -6,14 +6,9 @@ const logGroupNames = '/aws/lambda/logs-metrics-dev-log'.split(',');
 const queryString = 'fields @timestamp,  @message| filter @message like /INFO/| parse @message "INFO" as info| stats count(info)/2 as result';
 const queryRetry = 10;
 
-function sleep(ms) {
-  return x => new Promise(resolve => setTimeout(() => resolve(x), ms));
-}
-
 module.exports.log = async(event, context) => {
   const endTime = Math.floor(new Date().getTime() / 1000);
-  const startT = endTime - (6 * 60);
-  console.log("Asd")
+  const startT = endTime - (60 * 60);
   console.log(endTime)
   console.log(startT)
 
@@ -27,20 +22,22 @@ module.exports.log = async(event, context) => {
   return cloudwatchlogs.startQuery(paramsStartQuery).promise().then(async(data) => {
     let queryResults;
     let status = '';
+    
     while (!['Complete', 'Failed', 'Cancelled'].includes(status)) {
-      queryResults = await cloudwatchlogs.getQueryResults({ queryId: data.queryId }).promise().then(sleep(queryRetry)).catch((err) => { console.log(err); return { status: 'Failed' }; });
+      queryResults = await cloudwatchlogs.getQueryResults({ queryId: data.queryId }).promise().catch((err) => { console.log(err); return { status: 'Failed' }; });
       ({ status } = queryResults);
       console.log(status);
     }
-    if (status === 'Complete') {
+
+     if (status === 'Complete') {
       const metrics = [{
-        MetricName: '% of Success',
-        Value: queryResults.results[0][0].value,
-        Timestamp: endTime
-      }]
+        MetricName: '% of Success1',
+        Value: queryResults.results[0][0].value
+      }] 
+
       const paramsPutMetricData = {
         MetricData: metrics,
-        Namespace: 'teste-carol',
+        Namespace: 'teste-caroline'
       };
       await cloudwatch.putMetricData(paramsPutMetricData).promise().catch((err) => { console.log(err); });
       console.log('oi')

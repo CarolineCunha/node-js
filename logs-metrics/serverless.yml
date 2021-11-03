@@ -12,39 +12,67 @@ provider:
 functions:
   log:
     handler: handler.log
+    role: logsRole
     events:
      - schedule: 
         enabled: true
-        rate: rate(1 day)
-    Role: !GetAtt
-      - CloudWatchLogsRole
-      - Arn
-
+        rate: rate(60 minutes)
+    
 resources:
   Resources:
-    EscalationTopic:
+    TopicEmail:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: teste-topic
 
-    EscalationTopicEmailSubscriber:
+    TopicEmailSubscriber:
       Type: AWS::SNS::Subscription
       Properties:
         Endpoint: caroline.cunha.b@hotmail.com
         Protocol: email
-        TopicArn: !Ref EscalationTopic
+        TopicArn: !Ref TopicEmail
+
+    TopicEmailSubscriber2:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: caroline.cunha.b@gmail.com
+        Protocol: email
+        TopicArn: !Ref TopicEmail
 
     CloudFrontTotalErrorRateAlarm:
       Type: AWS::CloudWatch::Alarm
       Properties:
         ActionsEnabled: true
-        AlarmName: "[Notif][ASG][Lambda] Elevated error volume"
-        Namespace: 'teste-carol'
-        MetricName: '% of Success'
-        Statistic: Sum
-        Period: 300
+        AlarmName: "[Lambda] Elevated error volume"
+        Namespace: 'teste-caroline'
+        MetricName: '% of Success1'
+        Statistic: Average
+        Period: 86400
         EvaluationPeriods: 1
-        ComparisonOperator: GreaterThanOrEqualToThreshold
-        Threshold: 1
+        ComparisonOperator: LessThanOrEqualToThreshold
+        Threshold: 30
         AlarmActions:
-          - !Ref EscalationTopic
+          - !Ref TopicEmail
+      
+    logsRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: logsRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: myPolicyName
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:*
+                    - cloudwatch:*
+                  Resource: "*"
