@@ -9,6 +9,9 @@ provider:
   lambdaHashingVersion: 20201221
   region: us-east-1
 
+  environment:
+    LOG_GROUP_NAME: /aws/lambda/${self:service}-dev-log
+
 functions:
   log:
     handler: handler.log
@@ -32,14 +35,7 @@ resources:
         Protocol: email
         TopicArn: !Ref TopicEmail
 
-    TopicEmailSubscriber2:
-      Type: AWS::SNS::Subscription
-      Properties:
-        Endpoint: caroline.cunha.b@gmail.com
-        Protocol: email
-        TopicArn: !Ref TopicEmail
-
-    CloudFrontTotalErrorRateAlarm:
+    CloudMetricAlarm:
       Type: AWS::CloudWatch::Alarm
       Properties:
         ActionsEnabled: true
@@ -67,7 +63,7 @@ resources:
                   - lambda.amazonaws.com
               Action: sts:AssumeRole
         Policies:
-          - PolicyName: myPolicyName
+          - PolicyName: logPolicy
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
