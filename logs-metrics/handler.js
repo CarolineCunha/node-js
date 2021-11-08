@@ -11,7 +11,7 @@ console.log(logGroupName)
 //logGroupName.split(',')
 console.log(logGroupName)
 
-module.exports.log = async(event, context) => {
+module.exports.log = async (event, context) => {
   const endTime = Math.floor(new Date().getTime() / 1000)
   const startT = endTime - (60 * 60)
   console.log(endTime)
@@ -27,43 +27,43 @@ module.exports.log = async(event, context) => {
 
   try {
     const data = await cloudwatchlogs.startQuery(paramsStartQuery).promise()
-      var queryResults
-      var status = ''
-      
-      while (!['Complete', 'Failed', 'Cancelled'].includes(status)) {
-        queryResults = await cloudwatchlogs.getQueryResults({ queryId: data.queryId }).promise().catch((err) => { 
-          console.log(err) 
-          return { status: 'Failed' } 
-          });
-          ({ status } = queryResults)
-        console.log(status)
+    var queryResults
+    const status = ''
+
+    while (!['Complete', 'Failed', 'Cancelled'].includes(status)) {
+      queryResults = await cloudwatchlogs.getQueryResults({ queryId: data.queryId }).promise().catch((err) => {
+        console.log(err)
+        return { status: 'Failed' }
+      })
+      var { status } = queryResults
+      console.log(status)
+    }
+
+    if (status === 'Complete') {
+      const metrics = [{
+        MetricName: '% of Success1',
+        Value: queryResults.results[0][0].value
+      }]
+
+      const paramsPutMetricData = {
+        MetricData: metrics,
+        Namespace: 'teste-caroline'
       }
-  
-       if (status === 'Complete') {
-        const metrics = [{
-          MetricName: '% of Success1',
-          Value: queryResults.results[0][0].value
-        }] 
-  
-        const paramsPutMetricData = {
-          MetricData: metrics,
-          Namespace: 'teste-caroline'
-        }
-        await cloudwatch.putMetricData(paramsPutMetricData).promise().catch((err) => { 
-          console.log(err)
-        })
-        console.log('oi')
-        console.log(queryResults.statistics)
-        console.log(JSON.stringify(queryResults))
-        console.log(`Query ${queryResults.results[0][0].value}`)
-        return queryResults.results[0][0].value
-      }
-      else {
-        console.log('Query failed')
-        return `Query ${data.queryId} failed:\n${queryString}`
-      }
+      await cloudwatch.putMetricData(paramsPutMetricData).promise().catch((err) => {
+        console.log(err)
+      })
+      console.log('oi')
+      console.log(queryResults.statistics)
+      console.log(JSON.stringify(queryResults))
+      console.log(`Query ${queryResults.results[0][0].value}`)
+      return queryResults.results[0][0].value
+    }
+    else {
+      console.log('Query failed')
+      return `Query ${data.queryId} failed:\n${queryString}`
+    }
   }
-  catch(err) {
+  catch (err) {
     console.log(err)
   }
 }
