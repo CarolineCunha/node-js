@@ -7,3 +7,13 @@ function generateRandomId() {
 
 const teste = generateRandomId()
 console.log(teste)
+
+generateRandomId2 = () => {
+    const id = crypto.randomUUID()
+    return id
+}
+const teste2 = generateRandomId2()
+console.log(teste2)
+
+const teste3 = crypto.createHash('sha256').update(teste2).digest('hex')
+console.log(teste3)
