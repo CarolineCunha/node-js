@@ -17,3 +17,8 @@ console.log(teste2)
 
 const teste3 = crypto.createHash('sha256').update(teste2).digest('hex')
 console.log(teste3)
+
+function soma(x,y){
+    return x + y
+}
+soma(3,4)
