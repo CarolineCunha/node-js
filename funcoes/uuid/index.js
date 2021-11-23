@@ -22,3 +22,8 @@ function soma(x,y){
     return x + y
 }
 soma(3,4)
+
+function divisao(x,y){
+    return x/y
+}
+    
