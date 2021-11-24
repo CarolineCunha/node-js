@@ -26,4 +26,5 @@ soma(3,4)
 function divisao(x,y){
     return x/y
 }
+divisao(10,2)
     
