@@ -25,8 +25,16 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     type = "S"
   }
 
-  tags = {
-    Name        = "dynamodb-table-1"
-    Environment = "dev"
+  attribute {
+    name = "GameTitle"
+    type = "S"
+  }
+   global_secondary_index {
+    name               = "GameTitleIndex"
+    hash_key           = "GameTitle"
+    write_capacity     = 10
+    read_capacity      = 10
+    projection_type    = "INCLUDE"
+    non_key_attributes = ["UserId"]
   }
 }
