@@ -8,13 +8,13 @@ const sqs = new AWS.SQS({
   region: 'us-east-1'
 });
 msg = "Caroline";
-const sendMessage = async (event) => {
-    
+const sendMessage = async (msg, queueUrl) => {
+  
   try {
     const params = {
       MessageBody: JSON.stringify(msg),
       QueueUrl: queueUrl,
-      MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
+      MessageDeduplicationId: "Carol",  // Required for FIFO queues
       MessageGroupId: "1",  // Required for FIFO queues
     };
     const res = await sqs.sendMessage(params).promise();
@@ -23,8 +23,9 @@ const sendMessage = async (event) => {
   } catch (err) {
     console.log('Error:', `failed to send message ${err}`);
     throw new Error(err);
+    body = err
   }
 };
 
 module.exports = sendMessage;
-sendMessage('teste');
+sendMessage(msg,queueUrl);

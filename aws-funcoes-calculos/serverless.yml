@@ -8,6 +8,30 @@ provider:
   lambdaHashingVersion: 20201221
   region: us-east-1
 
+Parameters:
+
+  LogGroupNames:
+    Type: String
+    Description: /aws/lambda/aws-funcoes-calculos-dev-soma
+    AllowedPattern: '.+'
+    ConstraintDescription: LogGroupName is mandatory parameter
+  QueryString:
+    Type: String
+    Description: CloudWatch Insights query string to run
+    Default: 'fields @log, @timestamp, @message | stats count() by @log'
+  QueryGroupBy:
+    Type: String
+    Description: CloudWatch Insights field name used for grouping
+    Default: '@log'
+  QueryPeriod:
+    Type: Number
+    Description: Time window size in minutes
+    Default: 5
+  QueryDelay:
+    Type: Number
+    Description: Time to wait before data available to query in minutes
+    Default: 3
+
 functions:
   soma:
     handler: handler.soma

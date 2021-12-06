@@ -41,3 +41,5 @@ module.exports.multiplicacao = async (event) => {
   }
   return response;
 }
+
+module.exports

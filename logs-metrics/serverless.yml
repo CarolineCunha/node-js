@@ -41,7 +41,7 @@ resources:
         ActionsEnabled: true
         AlarmName: "[Lambda] Elevated error volume"
         Namespace: 'teste-caroline'
-        MetricName: '% of Success2'
+        MetricName: '% of Success25'
         Statistic: Average
         Period: 86400
         EvaluationPeriods: 1

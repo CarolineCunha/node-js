@@ -1,12 +1,28 @@
 service: ignitecertificate
 
-frameworkVersion: '2'
-
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   lambdaHashingVersion: 20201221
+  region: us-east-1
+  environment:
+    AWS_ACCESS_KEY_ID: AKIAUY5CAWAORDXKXH4B
+    AWS_SECRET_ACCESS_KEY: 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
+    AWS_QUEUE_URL: https://sqs.us-east-1.amazonaws.com/328367910941/testecarol.fifo
+    AWS_MESSAGE_GROUP: grupo
 
 functions:
-  hello:
-    handler: handler.hello
+  teste:
+    handler: handler.teste
+    
+resources:
+  Resources:
+    testecarol:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: testecarol.fifo
+        VisibilityTimeout: 300
+        FifoQueue: true
+        ContentBasedDeduplication: true
+
+

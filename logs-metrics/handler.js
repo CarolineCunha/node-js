@@ -8,6 +8,7 @@ const queryString = `fields @timestamp,  @message
                       | parse @message "INFO" as info
                       | stats count(info)/2 as result`
 console.log(logGroupName)
+console.log(queryString)
 //logGroupName.split(',')
 console.log(logGroupName)
 
@@ -28,7 +29,7 @@ module.exports.log = async (event, context) => {
   try {
     const data = await cloudwatchlogs.startQuery(paramsStartQuery).promise()
     var queryResults
-    const status = ''
+    var status = ''
 
     while (!['Complete', 'Failed', 'Cancelled'].includes(status)) {
       queryResults = await cloudwatchlogs.getQueryResults({ queryId: data.queryId }).promise().catch((err) => {
@@ -37,11 +38,13 @@ module.exports.log = async (event, context) => {
       })
       var { status } = queryResults
       console.log(status)
+      console.log(logGroupName)
+      console.log(queryString)
     }
 
     if (status === 'Complete') {
       const metrics = [{
-        MetricName: '% of Success1',
+        MetricName: '% of Success25',
         Value: queryResults.results[0][0].value
       }]
 
