@@ -6,8 +6,8 @@ provider:
   lambdaHashingVersion: 20201221
   region: us-east-1
   environment:
-    AWS_ACCESS_KEY_ID: AKIAUY5CAWAORDXKXH4B
-    AWS_SECRET_ACCESS_KEY: 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
+    AWS_ACCESS_KEY_ID: xxxxxxxxxxxxxx
+    AWS_SECRET_ACCESS_KEY: xxxxxxxxxxxxxxxxxxxxxxxx
     AWS_QUEUE_URL: https://sqs.us-east-1.amazonaws.com/328367910941/testecarol.fifo
     AWS_MESSAGE_GROUP: grupo
 
